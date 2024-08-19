@@ -234,6 +234,43 @@ def manage_input_sets(config):
         else:
             print("Invalid choice. Please try again.")
 
+def inject_echo_code(c_file_path):
+    with open(c_file_path, 'r') as f:
+        content = f.read()
+
+    # Regular expression to find scanf statements
+    scanf_pattern = r'scanf\s*\(\s*"([^"]+)"\s*,\s*([^)]+)\);'
+    
+    def replace_scanf(match):
+        format_specifier = match.group(1)
+        variables = [v.strip() for v in match.group(2).split(',')]
+        
+        cleaned_variables = []
+        for var in variables:
+            if var.startswith('&'):
+                cleaned_variables.append(var[1:].strip())
+            else:
+                cleaned_variables.append(var.strip())
+    
+        # Create printf statement to echo the input
+        echo_printf = f'printf("{format_specifier}\\n", {", ".join(cleaned_variables)});'
+    
+        
+        # Return the original scanf followed by the echo printf
+        return f'{match.group(0)}\n    {echo_printf}'
+
+    # Replace all scanf statements
+    modified_content = re.sub(scanf_pattern, replace_scanf, content)
+
+    # Create a new file with _testbench suffix
+    base_name = os.path.splitext(c_file_path)[0]
+    testbench_file = f"{base_name}_testbench.c"
+
+    with open(testbench_file, 'w') as f:
+        f.write(modified_content)
+
+    return testbench_file
+
 def manage_c_files(config):
     while True:
         print("\nC File Management:")
@@ -292,6 +329,22 @@ def manage_c_files(config):
         else:
             print("Invalid choice. Please try again.")
 
+def compile_c_file(c_file):
+    exe_file = os.path.splitext(c_file)[0]
+    compile_command = f"gcc {c_file} -o {exe_file}"
+    
+    try:
+        result = subprocess.run(compile_command, check=True, shell=True, capture_output=True, text=True)
+        print(f"Successfully compiled {c_file} to {exe_file}")
+        if result.stderr:
+            print("Compiler warnings:")
+            print(result.stderr)
+        return exe_file
+    except subprocess.CalledProcessError as e:
+        print(f"Error: Failed to compile {c_file}")
+        print("Compiler output:")
+        print(e.output)
+        return None
 def compile_and_run(config):
     if not config["c_files"]:
         print("No C files found. Please add a C file first.")
@@ -302,7 +355,12 @@ def compile_and_run(config):
         return
 
     c_file_path = config["c_files"][file_name]["path"]
-    exe_file = compile_c_file(c_file_path)
+    
+    # Inject echo code
+    testbench_file = inject_echo_code(c_file_path)
+    print(f"Created testbench file: {testbench_file}")
+
+    exe_file = compile_c_file(testbench_file)
     if not exe_file:
         return
 
@@ -328,6 +386,10 @@ def compile_and_run(config):
 
     config["last_used"] = {"c_file": file_name, "input_set": set_name if set_name else None}
     save_config(config)
+
+    # Clean up the testbench file
+    os.remove(testbench_file)
+    print(f"Removed testbench file: {testbench_file}")
 
 def main():
     config = load_config()
