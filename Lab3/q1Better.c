@@ -32,6 +32,7 @@ int main(){
     int count =0;
     printf("Select the choice: \n0: Traverse list\n1: Insert Node at the beginning\n2: Insert Node at the end\n3: Insert Node at the given position\n4: Search an element\n5: Update an element\n6: Delete node at begining\n7: Delete node at specific position\n8: Delete node at the end\n9: Reverse the List\n10: Exit\n");
     while(count != 10){
+        printf("Enter your choice: ");
         scanf("%d",&count);
         switch(count){
             case 0:
@@ -80,8 +81,8 @@ int main(){
                 size--;
             break;
             case 8:
-                printf("Deleting at begining\n");
-                DeleteNode(head, size, size);
+                printf("Deleting at end\n");
+                DeleteNode(head, size-1, size);
                 size--;
             break;
             case 9:
@@ -129,7 +130,7 @@ void Search(struct node* head, int data){
     struct node* ptr = head;
     while(ptr != NULL){
         if(ptr->data == data){
-            printf("Found at %u",ptr->next);
+            printf("Found at %u",ptr);
         }
         ptr = ptr->next;
     }

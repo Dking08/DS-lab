@@ -257,7 +257,7 @@ def inject_echo_code(c_file_path):
     
         
         # Return the original scanf followed by the echo printf
-        return f'{match.group(0)}\n    {echo_printf}'
+        return f'{match.group(0)}    {echo_printf}'
 
     # Replace all scanf statements
     modified_content = re.sub(scanf_pattern, replace_scanf, content)
