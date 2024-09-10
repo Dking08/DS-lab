@@ -50,7 +50,6 @@ int main() {
     traverse(head);
     
     int count = 0;
-    while (count != 11) {
         printf("Select the choice: \n");
         printf("0: Traverse list\n");
         printf("1: Insert Node at the beginning\n");
@@ -64,6 +63,7 @@ int main() {
         printf("9: Reverse the List\n");
         printf("10: Create Circular\n");
         printf("11: Exit\n");
+    while (count != 11) {
         printf("Enter your choice: ");
         scanf("%d", &count);
 
