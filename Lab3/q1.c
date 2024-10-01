@@ -6,6 +6,7 @@ struct node{
     struct node *next;
 };
 
+
 struct node* Reverse(struct node* head); 
 int main(){
     int size;

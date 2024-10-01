@@ -12,7 +12,6 @@ int isEmpty(struct Node* top) {
     return top == NULL;
 }
 
-
 void push(struct Node** top, int data) {
 
     struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));

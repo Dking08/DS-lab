@@ -40,7 +40,10 @@ int main(){
             }
         }
     }
+    
     printf("Printing Sprase Matrix:\n");
+    printf("Row\tColoumn\tData\n");
+    printf("%d\t%d\t%d\n",m,n,NZcount);
     for(int i=0;i<3;i++){
         for(int j=0;j<NZcount;j++){
             printf("%d ",*(SparseMat+i*NZcount+j));

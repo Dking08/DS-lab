@@ -8,7 +8,7 @@ struct node {
 };
 
 struct node* Reverse(struct node* head);
-int CFLAG = 0; // Circular flag
+int CFLAG = 0;
 
 void traverse(struct node* head);
 void insert(struct node** head, int loc, int size);
@@ -42,12 +42,13 @@ int main() {
         ptr = temp;
     }
     
-    ptr = head->next; // Adjusting to the first actual node
-    free(head); // Free the initial dummy node
+    ptr = head->next; 
+    free(head); 
     head = ptr;
     
     printf("The linked list is: \n");
     traverse(head);
+    
     
     int count = 0;
     while (count != 11) {
@@ -143,14 +144,12 @@ void traverse(struct node* head) {
     int index = 0;
     
     if (CFLAG == 0) {
-        // Non-circular traversal
         while (ptr != NULL) {
             printf(" [%d] %d || %p <-- %p --> %p\n", index, ptr->data, (void*)ptr->prev, (void*)ptr, (void*)ptr->next);
             ptr = ptr->next;
             index++;
         }
     } else {
-        // Circular traversal
         if (ptr != NULL) {
             struct node* start = head;
             do {
@@ -172,7 +171,7 @@ void insert(struct node** head, int loc, int size) {
     printf("Enter the data: ");
     scanf("%d", &temp->data);
     
-    if (loc == 0) { // Insertion at the beginning
+    if (loc == 0) { 
         if (*head == NULL) {
             temp->next = temp->prev = temp;
             *head = temp;
@@ -273,7 +272,7 @@ void DeleteNode(struct node** head, int loc, int size) {
     }
 
     struct node* ptr = *head;
-    if (loc == 0) { // Delete head
+    if (loc == 0) { 
         if (CFLAG) {
             struct node* last = (*head)->prev;
             *head = (*head)->next;
